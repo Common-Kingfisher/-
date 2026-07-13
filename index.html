@@ -1,0 +1,217 @@
+<!doctype html>
+<html lang="zh-CN" data-theme="dark">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <meta name="description" content="基于本地 12 周数据结构课程资料的暑假学习计划与进度管理工具">
+  <title>DSA Summer Runway</title>
+  <link rel="stylesheet" href="styles.css">
+</head>
+<body>
+  <a class="skip-link" href="#daily-plan">跳到今日任务</a>
+
+  <div class="app-shell">
+    <header class="topbar">
+      <a class="brand" href="#overview" aria-label="返回总览">
+        <span class="brand-mark" aria-hidden="true">DS</span>
+        <span>
+          <strong>Summer Runway</strong>
+          <small>Data Structures · 2026</small>
+        </span>
+      </a>
+
+      <nav class="top-actions" aria-label="全局操作">
+        <button class="button button-quiet" id="todayButton" type="button">回到今天</button>
+        <button class="icon-button" id="exportButton" type="button" aria-label="导出进度备份" title="导出进度备份">
+          <span aria-hidden="true">↓</span>
+        </button>
+        <button class="icon-button" id="themeButton" type="button" aria-label="切换深浅模式" title="切换深浅模式">
+          <span id="themeIcon" aria-hidden="true">◐</span>
+        </button>
+      </nav>
+    </header>
+
+    <main>
+      <section class="overview" id="overview" aria-labelledby="overviewTitle">
+        <div class="overview-copy">
+          <p class="eyebrow">07.13 — 09.01 · 43 个可学习日</p>
+          <h1 id="overviewTitle">今天只推进一小格。</h1>
+          <p id="overviewLead">课程有十二周，暑假只需要把下一步做实。</p>
+        </div>
+
+        <div class="metric-ledger" aria-label="学习总览">
+          <div class="metric">
+            <span>整体进度</span>
+            <strong id="progressMetric">0%</strong>
+            <progress id="overallProgress" max="100" value="0">0%</progress>
+          </div>
+          <div class="metric">
+            <span>已完成 / 待完成</span>
+            <strong><span id="completedMetric">0</span><i>/</i><span id="todoMetric">0</span></strong>
+            <small>所有学习与复习任务</small>
+          </div>
+          <div class="metric">
+            <span>剩余暑假</span>
+            <strong id="daysLeftMetric">0 天</strong>
+            <small>外出周不计学习任务</small>
+          </div>
+          <div class="metric">
+            <span>LeetCode</span>
+            <strong><span id="leetcodeMetric">0</span> 题</strong>
+            <small id="leetcodeTotal">计划 0 题</small>
+          </div>
+        </div>
+      </section>
+
+      <section class="runway-section" aria-labelledby="runwayTitle">
+        <div class="section-heading">
+          <div>
+            <p class="eyebrow">拖到日期上即可改期</p>
+            <h2 id="runwayTitle">暑假学习跑道</h2>
+          </div>
+          <div class="legend" aria-label="状态图例">
+            <span><i class="dot dot-active"></i>学习日</span>
+            <span><i class="dot dot-away"></i>外出</span>
+            <span><i class="dot dot-done"></i>清空</span>
+          </div>
+        </div>
+        <div class="date-runway" id="dateRunway" role="list" aria-label="暑假日期轴"></div>
+      </section>
+
+      <div class="workspace-grid">
+        <aside class="syllabus-panel" aria-labelledby="syllabusTitle">
+          <div class="panel-heading">
+            <div>
+              <p class="eyebrow">Source map</p>
+              <h2 id="syllabusTitle">12 周课程溯源</h2>
+            </div>
+            <span class="count-badge">W0–W11</span>
+          </div>
+          <div class="syllabus-list" id="syllabusList"></div>
+          <div class="source-detail" id="sourceDetail" aria-live="polite"></div>
+        </aside>
+
+        <section class="daily-panel" id="daily-plan" aria-labelledby="dailyTitle">
+          <header class="daily-header">
+            <div>
+              <p class="eyebrow" id="selectedWeekLabel">课程周</p>
+              <h2 id="dailyTitle">选择一天</h2>
+              <p id="dailySummary">任务会在这里展开。</p>
+            </div>
+            <div class="day-controls" aria-label="日期导航">
+              <button class="icon-button" id="previousDay" type="button" aria-label="前一天">←</button>
+              <button class="icon-button" id="nextDay" type="button" aria-label="后一天">→</button>
+            </div>
+          </header>
+
+          <div class="away-notice" id="awayNotice" hidden>
+            <span aria-hidden="true">⌁</span>
+            <div>
+              <strong>外出缓冲带</strong>
+              <p>8 月 19–25 日不安排学习。可以休息，也可以把提前完成当作进度余量。</p>
+            </div>
+          </div>
+
+          <div class="task-lanes" id="taskLanes">
+            <section class="task-lane task-lane-completed" id="completedLane" data-status="completed" aria-labelledby="completedTitle">
+              <div class="lane-heading">
+                <h3 id="completedTitle">Completed</h3>
+                <span id="completedCount">0</span>
+              </div>
+              <div class="task-list" id="completedList"></div>
+            </section>
+
+            <section class="task-lane task-lane-todo" id="todoLane" data-status="todo" aria-labelledby="todoTitle">
+              <div class="lane-heading">
+                <h3 id="todoTitle">To be done</h3>
+                <span id="todoCount">0</span>
+              </div>
+              <div class="task-list" id="todoList"></div>
+            </section>
+          </div>
+        </section>
+
+        <aside class="insight-panel" aria-label="复习与刷题辅助区">
+          <section class="insight-section" aria-labelledby="reviewTitle">
+            <div class="panel-heading">
+              <div>
+                <p class="eyebrow">1 · 3 · 7 · 14</p>
+                <h2 id="reviewTitle">记忆曲线</h2>
+              </div>
+              <span class="count-badge" id="reviewCount">0</span>
+            </div>
+            <div class="compact-list" id="reviewList"></div>
+          </section>
+
+          <section class="insight-section" aria-labelledby="leetcodeTitle">
+            <div class="panel-heading">
+              <div>
+                <p class="eyebrow">Problem ledger</p>
+                <h2 id="leetcodeTitle">LeetCode 台账</h2>
+              </div>
+              <button class="text-button" id="toggleProblems" type="button">查看全部</button>
+            </div>
+            <div class="compact-list" id="problemList"></div>
+          </section>
+
+          <figure class="quote-block">
+            <blockquote id="quoteText">“先写能跑的，再写优雅的。”</blockquote>
+            <figcaption id="quoteAuthor">— 今日提醒</figcaption>
+          </figure>
+        </aside>
+      </div>
+    </main>
+
+    <footer class="footer-bar">
+      <span>数据保存在本机浏览器</span>
+      <span class="shortcut-hints"><kbd>[</kbd><kbd>]</kbd> 切换日期 · <kbd>T</kbd> 主题</span>
+      <button class="text-button danger-text" id="resetButton" type="button">重置进度</button>
+    </footer>
+  </div>
+
+  <dialog class="move-dialog" id="moveDialog" aria-labelledby="moveDialogTitle">
+    <form method="dialog" id="moveForm">
+      <div class="dialog-heading">
+        <div>
+          <p class="eyebrow">Reschedule</p>
+          <h2 id="moveDialogTitle">调整任务日期</h2>
+        </div>
+        <button class="icon-button" value="cancel" aria-label="关闭">×</button>
+      </div>
+      <p id="moveTaskName"></p>
+      <label for="moveDate">新日期</label>
+      <input id="moveDate" name="moveDate" type="date" min="2026-07-13" max="2026-08-31" required>
+      <div class="dialog-actions">
+        <button class="button button-quiet" value="cancel">取消</button>
+        <button class="button button-primary" id="confirmMove" value="default">保存日期</button>
+      </div>
+    </form>
+  </dialog>
+
+  <dialog class="confirm-dialog" id="resetDialog" aria-labelledby="resetDialogTitle">
+    <form method="dialog">
+      <h2 id="resetDialogTitle">重置全部进度？</h2>
+      <p>课程计划会恢复初始状态，当前完成记录和改期信息会被清除。</p>
+      <div class="dialog-actions">
+        <button class="button button-quiet" value="cancel">保留进度</button>
+        <button class="button button-danger" id="confirmReset" value="default">确认重置</button>
+      </div>
+    </form>
+  </dialog>
+
+  <div class="celebration" id="celebration" aria-live="polite" hidden>
+    <div class="celebration-copy">
+      <span>DAY CLEAR</span>
+      <strong>今天的格子，推进完毕。</strong>
+    </div>
+    <div class="spark-field" aria-hidden="true">
+      <i></i><i></i><i></i><i></i><i></i><i></i><i></i><i></i>
+    </div>
+  </div>
+
+  <div class="toast" id="toast" role="status" aria-live="polite" hidden></div>
+
+  <script src="data.js"></script>
+  <script src="app.js"></script>
+</body>
+</html>
